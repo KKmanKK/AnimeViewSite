@@ -11,30 +11,46 @@ datasource db {
 }
 
 model anime {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  source      String
-  season      String
-  release     DateTime
-  duration    String
-  img         String
-  frames      String
-  trailer     String
-  video       String
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  source       source[]
+  season       String
+  release      DateTime
+  duration     String
+  img          String
+  frames       String
+  trailer      String
+  video        String
+  viewUser     user?    @relation("ViewAnime", fields: [viewUserId], references: [id])
+  viewUserId   Int?
+  viewedUser   user?    @relation("ViewedAnime", fields: [viewedUserId], references: [id])
+  viewedUserId Int
+  ganre        genre[]
 }
 
 model genre {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
+  anime       anime   @relation(fields: [animeId], references: [id])
+  animeId     Int
+}
+
+model source {
+  id      Int    @id @default(autoincrement())
+  name    String
+  anime   anime  @relation(fields: [animeId], references: [id])
+  animeId Int
 }
 
 model user {
-  id       Int    @id @default(autoincrement())
-  name     String
-  lastName String
-  country  String
-  email    String
-  password String
+  id          Int     @id @default(autoincrement())
+  name        String
+  lastName    String
+  country     String
+  email       String
+  password    String
+  viewAnime   anime[] @relation("ViewAnime")
+  viewedAnime anime[] @relation("ViewedAnime")
 }
